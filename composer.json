@@ -15,7 +15,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Http\\Client\\Bitrix\\": "src/"
+      "Http\\Adapter\\Bitrix\\": "src/"
     }
   },
   "provide": {

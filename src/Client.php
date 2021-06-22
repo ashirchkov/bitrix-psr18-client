@@ -1,14 +1,14 @@
 <?php
 
-namespace Http\Client\Bitrix;
+namespace Http\Adapter\Bitrix;
 
-use Bitrix\Main\Web\HttpClient;
+use Bitrix\Main\Web\HttpClient as BitrixHttpClient;
+use Http\Client\HttpClient;
 use Http\Discovery\Psr17FactoryDiscovery;
-use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
-class Client implements ClientInterface
+class Client implements HttpClient
 {
 
     private $client;
@@ -17,7 +17,8 @@ class Client implements ClientInterface
 
     public function __construct(array $options = []) {
 
-        $this->client = new HttpClient($options);
+
+        $this->client = new BitrixHttpClient($options);
         $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
         $this->responseFactory = Psr17FactoryDiscovery::findResponseFactory();
 
