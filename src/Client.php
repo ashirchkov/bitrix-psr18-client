@@ -17,7 +17,6 @@ class Client implements HttpClient
 
     public function __construct(array $options = []) {
 
-
         $this->client = new BitrixHttpClient($options);
         $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
         $this->responseFactory = Psr17FactoryDiscovery::findResponseFactory();
