@@ -25,10 +25,20 @@ class Client implements HttpClient
 
     public function sendRequest(RequestInterface $request): ResponseInterface {
 
+        foreach($request->getHeaders() as $headerName => $headerValues) {
+            if(count($headerValues) > 1) {
+                foreach($headerValues as $headerValue) {
+                    $this->client->setHeader($headerName, $headerValue, false);
+                }
+            } else {
+                $this->client->setHeader($headerName, current($headerValues));
+            }
+        }
+
         $queryResult = $this->client->query(
             $request->getMethod(),
-            $request->getUri(),
-            $request->getBody()
+            $request->getUri()->__toString(),
+            $request->getBody()->__toString()
         );
 
         $response = $this->responseFactory->createResponse(
