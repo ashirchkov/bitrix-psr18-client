@@ -51,7 +51,17 @@ class Client implements HttpClient
                 $this->client->getResult()
             );
 
-            $response->withBody($body);
+            $response = $response->withBody($body);
+
+            foreach($this->client->getHeaders()->toArray() as $header) {
+                if(count($header['values']) > 1) {
+                    foreach($header['values'] as $headerValue) {
+                        $response = $response->withAddedHeader($header['name'], $headerValue);
+                    }
+                } else {
+                    $response = $response->withHeader($header['name'], current($header['values']));
+                }
+            }
 
         }
 
