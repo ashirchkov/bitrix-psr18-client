@@ -11,13 +11,12 @@ use Psr\Http\Message\ResponseInterface;
 class Client implements HttpClient
 {
 
-    private $client;
+    private $options;
     private $streamFactory;
     private $responseFactory;
 
     public function __construct(array $options = []) {
 
-        $this->client = new BitrixHttpClient($options);
         $this->streamFactory = Psr17FactoryDiscovery::findStreamFactory();
         $this->responseFactory = Psr17FactoryDiscovery::findResponseFactory();
 
@@ -25,35 +24,37 @@ class Client implements HttpClient
 
     public function sendRequest(RequestInterface $request): ResponseInterface {
 
+        $client = new BitrixHttpClient($this->options);
+
         foreach($request->getHeaders() as $headerName => $headerValues) {
             if(count($headerValues) > 1) {
                 foreach($headerValues as $headerValue) {
-                    $this->client->setHeader($headerName, $headerValue, false);
+                    $client->setHeader($headerName, $headerValue, false);
                 }
             } else {
-                $this->client->setHeader($headerName, current($headerValues));
+                $client->setHeader($headerName, current($headerValues));
             }
         }
 
-        $queryResult = $this->client->query(
+        $queryResult = $client->query(
             $request->getMethod(),
             $request->getUri()->__toString(),
             $request->getBody()->__toString()
         );
 
         $response = $this->responseFactory->createResponse(
-            $this->client->getStatus()
+            $client->getStatus()
         );
 
         if($queryResult) {
 
             $body = $this->streamFactory->createStream(
-                $this->client->getResult()
+                $client->getResult()
             );
 
             $response = $response->withBody($body);
 
-            foreach($this->client->getHeaders()->toArray() as $header) {
+            foreach($client->getHeaders()->toArray() as $header) {
                 if(count($header['values']) > 1) {
                     foreach($header['values'] as $headerValue) {
                         $response = $response->withAddedHeader($header['name'], $headerValue);
