@@ -52,6 +52,7 @@ class Client implements HttpClient
             $body = $this->streamFactory->createStream(
                 $client->getResult()
             );
+            $body->rewind();
 
             $response = $response->withBody($body);
 
