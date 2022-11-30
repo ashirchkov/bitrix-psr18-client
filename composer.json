@@ -9,7 +9,7 @@
     "php-http/httplug": "2.2.0",
     "php-http/discovery": "1.14.0",
     "php-http/message": "1.11.1",
-    "nyholm/psr7": "1.4.0"
+    "nyholm/psr7": "1.5.1"
   },
   "autoload": {
     "psr-4": {
